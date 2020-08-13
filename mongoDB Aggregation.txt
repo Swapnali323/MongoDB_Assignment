@@ -1,0 +1,35 @@
+1. db.zipCodes.find({city:"ATLANTA",state:"GA"})
+
+2. db.zipCodes.aggregate([{$match:{city:"ATLANTA",state:"GA"}}])
+
+3. db.zipCodes.aggregate([{$match:{city:"ATLANTA"}},{$group:{_id:"$_id"}},{$count:"TotalZipCodes"}])
+{ "TotalZipCodes" : 41 }
+
+4. db.zipCodes.aggregate([{$match:{city:"ATLANTA"}},
+       {$group:{_id:"$city",totalpop:{$sum:"$pop"}
+{ "_id" : "ATLANTA", "totalpop" : 630046 }
+
+1.  db.zipCodes.aggregate([{$group:{_id:"$state",totalpopbystate:{$sum:"$pop"},count:{$sum:1}}}])
+
+2.db.zipCodes.aggregate([{$group:{_id:"$state",totalpopbystate:{$sum:"$pop"}}},{$sort:{totalpopbystate:-1}}])
+
+3. db.zipCodes.aggregate([{$group:{_id:"$state",totalpopbystate:{$sum:"$pop"}}},{$sort:{totalpopbystate:-1}},{$limit:3}])
+
+1. db.zipCodes.aggregate([{$group: { _id: {city: '$city', state: '$state'},
+ population: {$sum: '$pop'}}}])
+{ "_id" : { "city" : "SUMMER LAKE", "state" : "OR" }, "population" : 1 }
+
+2. db.zipCodes.aggregate([{$group: { _id: {city: '$city', state: '$state'}, population: {$sum: '$pop'} }},{$sort:{population:-1}}])
+
+3. db.zipCodes.aggregate([{$group: { _id: {city: '$city', state: '$state'}, population: {$sum: '$pop'} }},{$sort:{population:-1}},{$limit:3}])
+{ "_id" : { "city" : "CHICAGO", "state" : "IL" }, "population" : 2452177 }
+{ "_id" : { "city" : "BROOKLYN", "state" : "NY" }, "population" : 2300504 }
+{ "_id" : { "city" : "LOS ANGELES", "state" : "CA" }, "population" : 2102295 }
+
+1. db.zipCodes.aggregate([{$group:{_id:{state:"$state",city:"$city"},avgPop:{$avg:"$pop"}}}])
+{ "_id" : { "state" : "MD", "city" : "PORT TOBACCO" }, "avgPop" : 1149 }
+
+2. db.zipCodes.aggregate([{$group:{_id:{state:"$state",city:"$city"},avgPop:{$avg:"$pop"}}},{$sort:{avgPop:-1}},{$limit:3}])
+{ "_id" : { "state" : "CA", "city" : "BELL GARDENS" }, "avgPop" : 99568 }
+{ "_id" : { "state" : "CA", "city" : "NORWALK" }, "avgPop" : 94188 }
+{ "_id" : { "state" : "CA", "city" : "ARLETA" }, "avgPop" : 88114 }
